@@ -31,6 +31,7 @@ const typeLabels: Record<string, string> = {
 };
 
 const typeOrder = ["working", "journal", "chapter", "report", "oped", "conference"];
+const linkOnlyTypes = new Set(["chapter", "report", "oped"]);
 
 const defaultPublications: Publication[] = [
   // --- Published ---
@@ -135,24 +136,20 @@ const defaultPublications: Publication[] = [
 
 export default function Publications({ publications }: PublicationsProps) {
   const displayPubs = publications?.length > 0 ? publications : defaultPublications;
-  const [filter, setFilter] = useState<string>("all");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-
-  const availableTypes = new Set(displayPubs.map((p) => p.type));
+  const publicationOnly = displayPubs.filter((publication) => publication.type !== "working");
+  const availableTypes = new Set(publicationOnly.map((publication) => publication.type));
   const types = [
-    "all",
-    ...typeOrder.filter((type) => availableTypes.has(type)),
+    ...typeOrder.filter((type) => type !== "working" && availableTypes.has(type)),
     ...Array.from(availableTypes).filter((type) => !typeOrder.includes(type)),
   ];
-  const filtered = filter === "all" ? displayPubs : displayPubs.filter((p) => p.type === filter);
+  const [filter, setFilter] = useState<string>(() => types[0] || "journal");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const filtered = publicationOnly.filter((publication) => publication.type === filter);
 
   return (
     <section id="publications" className="py-24 md:py-32">
-      <div className="max-w-7xl mx-auto px-6">
-        <SectionHeading
-          title="Publications"
-          subtitle="Selected research contributions in quantitative marketing and emerging markets."
-        />
+      <div className="mx-auto max-w-[1520px] px-5 sm:px-6 lg:px-8">
+        <SectionHeading title="Publications" />
 
         {/* Filter buttons */}
         <ScrollReveal className="mb-10">
@@ -167,7 +164,7 @@ export default function Publications({ publications }: PublicationsProps) {
                     : "bg-cream-dark text-indigo-deep/60 hover:bg-indigo-deep/10"
                 }`}
               >
-                {type === "all" ? "All" : typeLabels[type] || type}
+                {typeLabels[type] || type}
               </button>
             ))}
           </div>
@@ -177,34 +174,45 @@ export default function Publications({ publications }: PublicationsProps) {
         <div className="space-y-4">
           {filtered.map((pub, i) => (
             <ScrollReveal key={pub._id} delay={i * 0.05}>
-              <div className="pub-card bg-white rounded-xl p-6 md:p-8 border border-indigo-deep/5">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber/10 text-amber">
-                        {typeLabels[pub.type] || pub.type}
-                      </span>
-                      <span className="text-sm text-slate-warm">{pub.year}</span>
-                      {pub.featured && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-deep/5 text-indigo-deep">
-                          Featured
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="font-serif text-lg md:text-xl font-bold text-indigo-deep mb-2">
+              <article className="pub-card rounded-xl border border-indigo-deep/5 bg-white p-5 shadow-[0_4px_24px_rgba(30,27,75,0.035)] md:p-6">
+                <div className="grid grid-cols-1 items-start gap-x-4 gap-y-3 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-y-4 md:grid-cols-[auto_minmax(0,1fr)_auto] md:gap-x-6">
+                  <span className="justify-self-start rounded-lg border border-amber/10 bg-amber/5 px-3 py-2 text-base font-semibold leading-none text-amber md:text-lg">
+                    {pub.year}
+                  </span>
+
+                  <div className="min-w-0">
+                    <h3 className="mb-1.5 font-serif text-base font-bold leading-snug text-indigo-deep md:text-lg">
                       {pub.title}
                     </h3>
-                    <p className="text-slate-warm text-sm mb-1">{pub.authors}</p>
-                    <p className="text-slate-warm/70 text-sm italic">{pub.journal}</p>
+                    <p className="mb-0.5 text-sm text-slate-warm">{pub.authors}</p>
+                    <p className="text-sm italic text-slate-warm/80">{pub.journal}</p>
 
                     {/* Expandable abstract */}
-                    {pub.abstract && (
-                      <div className="mt-3">
+                    {pub.abstract && !linkOnlyTypes.has(pub.type) && (
+                      <div className="mt-2.5">
                         <button
                           onClick={() => setExpandedId(expandedId === pub._id ? null : pub._id)}
-                          className="text-amber text-sm font-medium hover:text-amber-light transition-colors"
+                          aria-expanded={expandedId === pub._id}
+                          className="inline-flex items-center gap-2 text-amber text-sm font-medium hover:text-amber-light transition-colors"
                         >
-                          {expandedId === pub._id ? "Hide Abstract" : "Show Abstract"}
+                          <span>Abstract</span>
+                          <svg
+                            aria-hidden="true"
+                            viewBox="0 0 12 8"
+                            fill="none"
+                            className="h-2 w-3 transition-transform duration-200"
+                            style={{
+                              transform: expandedId === pub._id ? "rotate(180deg)" : undefined,
+                            }}
+                          >
+                            <path
+                              d="M1 1.25 6 6.25l5-5"
+                              stroke="currentColor"
+                              strokeWidth="1.75"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
                         </button>
                         {expandedId === pub._id && (
                           <p className="mt-2 text-sm text-indigo-deep/60 leading-relaxed">
@@ -215,31 +223,46 @@ export default function Publications({ publications }: PublicationsProps) {
                     )}
                   </div>
 
-                  {/* Links */}
-                  <div className="flex flex-row sm:flex-col gap-2 shrink-0">
-                    {pub.doi && (
-                      <a
-                        href={`https://doi.org/${pub.doi}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded-lg border border-indigo-deep/10 text-xs font-medium text-indigo-deep/70 hover:border-amber hover:text-amber transition-colors"
-                      >
-                        DOI
-                      </a>
-                    )}
-                    {pub.pdfUrl && (
-                      <a
-                        href={pub.pdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3 py-1.5 rounded-lg bg-indigo-deep text-white text-xs font-medium hover:bg-indigo-mid transition-colors"
-                      >
-                        PDF
-                      </a>
-                    )}
-                  </div>
+                  {/* Only render actions with a real destination. */}
+                  {(pub.doi || pub.pdfUrl) && (
+                    <div className="flex flex-row flex-wrap gap-2 sm:col-start-2 md:col-start-3 md:row-start-1 md:min-w-20 md:flex-col">
+                      {pub.doi && (
+                        <a
+                          href={`https://doi.org/${pub.doi}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex min-w-20 items-center justify-center gap-2 rounded-lg border border-indigo-deep/10 px-3 py-1.5 text-xs font-semibold text-indigo-deep transition-colors hover:border-amber hover:text-amber"
+                        >
+                          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+                            <path d="m10 13 4-4m-6.5 7.5-1 1a4 4 0 0 1-5.66-5.66l4-4a4 4 0 0 1 5.66 0m3-1 1-1a4 4 0 0 1 5.66 5.66l-4 4a4 4 0 0 1-5.66 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          DOI
+                        </a>
+                      )}
+                      {pub.pdfUrl && (
+                        <a
+                          href={pub.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={linkOnlyTypes.has(pub.type) ? `Open link for ${pub.title}` : `Open PDF for ${pub.title}`}
+                          className="inline-flex min-w-20 items-center justify-center gap-2 rounded-lg bg-indigo-deep px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-mid"
+                        >
+                          {linkOnlyTypes.has(pub.type) ? (
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+                              <path d="M13 5h6v6m0-6-9 9M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          ) : (
+                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+                              <path d="M7 2.75h7l4 4V20a1.25 1.25 0 0 1-1.25 1.25h-9.5A1.25 1.25 0 0 1 6 20V4a1.25 1.25 0 0 1 1-1.25Zm7 .25v4h4M9 11h6m-6 3h6m-6 3h4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          )}
+                          {linkOnlyTypes.has(pub.type) ? "Link" : "PDF"}
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </div>
+              </article>
             </ScrollReveal>
           ))}
         </div>

@@ -101,7 +101,7 @@ function DataPartnerLogo({ name }: { name: string }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2m7-10a4 4 0 100-8 4 4 0 000 8zm13 10v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
           </svg>
         </span>
-        <span className="whitespace-nowrap text-xs">Microentrepreneurs in Egypt</span>
+        <span className="whitespace-nowrap text-[10px] xl:text-xs">Microentrepreneurs in Egypt</span>
       </span>
     );
   }
@@ -186,11 +186,8 @@ export default function Projects({ projects }: ProjectsProps) {
   return (
     <section id="projects" className="relative bg-cream-dark/50 py-20 md:py-24">
       <div className="absolute inset-0 dot-grid opacity-30" />
-      <div className="relative mx-auto max-w-[1744px] px-5 sm:px-6 lg:px-8">
-        <SectionHeading
-          title="Research Projects"
-          subtitle="Active and recent research initiatives across emerging markets."
-        />
+      <div className="relative mx-auto max-w-[1520px] px-5 sm:px-6 lg:px-8">
+        <SectionHeading title="Working Papers" />
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
           {displayProjects.map((project, i) => (
@@ -257,7 +254,7 @@ export default function Projects({ projects }: ProjectsProps) {
                         </svg>
                         <p className="min-w-0">
                           <span className="block text-[11px] font-medium text-indigo-deep/80">Collaborators</span>
-                          <span className="block text-[11px] xl:whitespace-nowrap">{project.collaborators}</span>
+                          <span className="block text-[11px]">{project.collaborators}</span>
                         </p>
                       </div>
                     )}
