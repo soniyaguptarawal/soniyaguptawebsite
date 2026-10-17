@@ -28,7 +28,6 @@ export default async function ResearchLabPage() {
     <main>
       <Navbar />
       <PageHero
-        eyebrow={intro.eyebrow}
         title={intro.title}
         description={intro.description}
       />

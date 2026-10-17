@@ -3,13 +3,13 @@ import {getCliClient} from 'sanity/cli'
 const client = getCliClient({apiVersion: '2024-01-01'})
 
 const pageIntros = [
-  ['publications', 'Research portfolio', 'Publications', 'Projects in motion and the papers, cases, reports, and public writing that emerge from them.'],
-  ['teaching', 'Learning by doing', 'Teaching', 'MBA teaching, course coordination, and undergraduate supervision across marketing, innovation, and customer engagement.'],
-  ['awards', 'Recognition', 'Awards', 'Grants, fellowships, scholarships, and honours supporting research with real-world reach.'],
-  ['talks', 'Ideas in conversation', 'Talks', 'Conference presentations, doctoral consortia, seminars, and workshops where research is tested and sharpened.'],
-  ['media-mentions', 'In the public conversation', 'Media Mentions', 'Research stories, press coverage, and ideas translated for audiences beyond academia.'],
-  ['academic-service', 'Contributing to the field', 'Academic Service', 'Peer review, professional communities, and service that strengthen research institutions and scholarly exchange.'],
-  ['research-lab', 'Build research together', 'Research Lab', 'A collaborative home for research apprentices, assistants, and students working on markets at the margins.'],
+  ['publications', 'Research & Publications', 'My research examines how digital technologies, innovation, and market institutions shape firm behaviour, consumer decision-making, and economic outcomes in emerging markets. I draw on quantitative methods, field-based research, and collaborations with organisations to investigate questions at the intersection of marketing, technology, and development.'],
+  ['teaching', 'Teaching', 'MBA teaching, course coordination, and undergraduate supervision across marketing, innovation, and customer engagement.'],
+  ['awards', 'Awards', 'Grants, fellowships, scholarships, and honours supporting research with real-world reach.'],
+  ['talks', 'Talks', 'Conference presentations, doctoral consortia, seminars, and workshops where research is tested and sharpened.'],
+  ['media-mentions', 'Media Mentions', 'Research stories, press coverage, and ideas translated for audiences beyond academia.'],
+  ['academic-service', 'Academic Service', 'Peer review, professional communities, and service that strengthen research institutions and scholarly exchange.'],
+  ['research-lab', 'Research Lab', 'A collaborative home for research apprentices, assistants, and students working on markets at the margins.'],
 ]
 
 const doctoralDevelopment = [
@@ -57,15 +57,11 @@ const redundantSeededTalkIds = [1, 3, 4, 6, 7, 8, 13, 14]
 
 let transaction = client.transaction()
 
-pageIntros.forEach(([page, eyebrow, title, description]) => {
-  transaction = transaction.createIfNotExists({
-    _id: `page-intro-${page}`,
-    _type: 'pageIntro',
-    page,
-    eyebrow,
-    title,
-    description,
-  })
+pageIntros.forEach(([page, title, description]) => {
+  const id = `page-intro-${page}`
+  transaction = transaction
+    .createIfNotExists({_id: id, _type: 'pageIntro', page, title, description})
+    .patch(id, (patch) => patch.set({page, title, description}).unset(['eyebrow']))
 })
 
 doctoralDevelopment.forEach(([year, title, detail], index) => {

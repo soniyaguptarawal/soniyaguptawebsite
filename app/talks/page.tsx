@@ -29,7 +29,6 @@ export default async function TalksPage() {
     <main>
       <Navbar />
       <PageHero
-        eyebrow={intro.eyebrow}
         title={intro.title}
         description={intro.description}
       />

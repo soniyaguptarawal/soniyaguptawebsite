@@ -24,7 +24,6 @@ export default async function AwardsPage() {
     <main>
       <Navbar />
       <PageHero
-        eyebrow={intro.eyebrow}
         title={intro.title}
         description={intro.description}
       />

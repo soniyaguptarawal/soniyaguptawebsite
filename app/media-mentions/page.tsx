@@ -41,7 +41,6 @@ export default async function MediaMentionsPage() {
     <main>
       <Navbar />
       <PageHero
-        eyebrow={intro.eyebrow}
         title={intro.title}
         description={intro.description}
       />
