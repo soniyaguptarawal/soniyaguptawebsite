@@ -29,9 +29,11 @@ export default defineType({
       type: "string",
       options: {
         list: [
-          { title: "Journal Article", value: "journal" },
-          { title: "Working Paper", value: "working" },
-          { title: "Book Chapter", value: "chapter" },
+          { title: "Working Papers", value: "working" },
+          { title: "Journal Publications", value: "journal" },
+          { title: "Case Studies", value: "chapter" },
+          { title: "Reports", value: "report" },
+          { title: "Op-Eds", value: "oped" },
           { title: "Conference Paper", value: "conference" },
         ],
       },
