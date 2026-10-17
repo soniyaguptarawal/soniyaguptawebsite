@@ -6,6 +6,7 @@ import PageHero from "@/components/PageHero";
 import { fetchOgImage } from "@/lib/fetchOgImage";
 import { newsQuery } from "@/lib/queries";
 import { client, hasConfig } from "@/sanity/client";
+import { getPageIntro } from "@/lib/pageIntro";
 
 export const revalidate = 0;
 
@@ -25,7 +26,10 @@ interface NewsItem {
 }
 
 export default async function MediaMentionsPage() {
-  const news = hasConfig ? await client.fetch(newsQuery).catch(() => []) : [];
+  const [intro, news] = await Promise.all([
+    getPageIntro("media-mentions"),
+    hasConfig ? client.fetch(newsQuery).catch(() => []) : [],
+  ]);
   const items = await Promise.all(
     news.map(async (item: NewsItem) => ({
       ...item,
@@ -37,9 +41,9 @@ export default async function MediaMentionsPage() {
     <main>
       <Navbar />
       <PageHero
-        eyebrow="In the public conversation"
-        title="Media Mentions"
-        description="Research stories, press coverage, and ideas translated for audiences beyond academia."
+        eyebrow={intro.eyebrow}
+        title={intro.title}
+        description={intro.description}
       />
       <NewsInsights items={items} />
       <Footer />

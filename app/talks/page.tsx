@@ -5,8 +5,9 @@ import PageHero from "@/components/PageHero";
 import ProfileList from "@/components/ProfileList";
 import Talks from "@/components/Talks";
 import { cvConferencePresentations, doctoralDevelopment } from "@/lib/cvContent";
-import { talksQuery } from "@/lib/queries";
+import { doctoralDevelopmentQuery, talksQuery } from "@/lib/queries";
 import { client, hasConfig } from "@/sanity/client";
+import { getPageIntro } from "@/lib/pageIntro";
 
 export const revalidate = 0;
 
@@ -16,32 +17,27 @@ export const metadata: Metadata = {
 };
 
 export default async function TalksPage() {
-  const sanityTalks = hasConfig ? await client.fetch(talksQuery).catch(() => []) : [];
-  const eventKeys = new Set(
-    sanityTalks.map((talk: { event?: string; title?: string }) =>
-      `${talk.title || ""}::${talk.event || ""}`.toLowerCase().trim()
-    )
-  );
-  const talks = [
-    ...sanityTalks,
-    ...cvConferencePresentations.filter(
-      (talk) => !eventKeys.has(`${talk.title}::${talk.event}`.toLowerCase().trim())
-    ),
-  ].sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  const [intro, sanityTalks, sanityDevelopment] = await Promise.all([
+    getPageIntro("talks"),
+    hasConfig ? client.fetch(talksQuery).catch(() => []) : [],
+    hasConfig ? client.fetch(doctoralDevelopmentQuery).catch(() => []) : [],
+  ]);
+  const talks = sanityTalks.length ? sanityTalks : cvConferencePresentations;
+  const development = sanityDevelopment.length ? sanityDevelopment : doctoralDevelopment;
 
   return (
     <main>
       <Navbar />
       <PageHero
-        eyebrow="Ideas in conversation"
-        title="Talks"
-        description="Conference presentations, doctoral consortia, seminars, and workshops where research is tested and sharpened."
+        eyebrow={intro.eyebrow}
+        title={intro.title}
+        description={intro.description}
       />
       <Talks talks={talks} />
       <ProfileList
         title="Doctoral Seminars & Competitive Workshops"
         subtitle="Selective programmes and advanced training across marketing, causal inference, and field research."
-        items={doctoralDevelopment}
+        items={development}
         tone="tinted"
       />
       <Footer />

@@ -6,6 +6,7 @@ import Projects from "@/components/Projects";
 import Publications from "@/components/Publications";
 import { projectsQuery, publicationsQuery } from "@/lib/queries";
 import { client, hasConfig } from "@/sanity/client";
+import { getPageIntro } from "@/lib/pageIntro";
 
 export const revalidate = 0;
 
@@ -15,20 +16,21 @@ export const metadata: Metadata = {
 };
 
 export default async function PublicationsPage() {
-  const [projects, publications] = hasConfig
+  const [intro, projects, publications] = hasConfig
     ? await Promise.all([
+        getPageIntro("publications"),
         client.fetch(projectsQuery).catch(() => []),
         client.fetch(publicationsQuery).catch(() => []),
       ])
-    : [[], []];
+    : [await getPageIntro("publications"), [], []];
 
   return (
     <main>
       <Navbar />
       <PageHero
-        eyebrow="Research portfolio"
-        title="Publications"
-        description="Projects in motion and the papers, cases, reports, and public writing that emerge from them."
+        eyebrow={intro.eyebrow}
+        title={intro.title}
+        description={intro.description}
       />
       <Projects projects={projects} />
       <Publications publications={publications} />

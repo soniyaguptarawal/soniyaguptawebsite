@@ -5,6 +5,12 @@ export const siteSectionsQuery = groq`*[_type == "siteSection"] | order(order as
   order
 }`;
 
+export const pageIntroQuery = groq`*[_type == "pageIntro" && page == $page][0]{
+  eyebrow,
+  title,
+  description
+}`;
+
 export const profileQuery = groq`*[_type == "profile"][0]{
   name,
   title,
@@ -171,4 +177,19 @@ export const teachingQuery = groq`*[_type == "teaching"] | order(order asc){
   courseOutlineUrl,
   photo,
   order
+}`;
+
+export const doctoralDevelopmentQuery = groq`*[_type == "doctoralDevelopment"] | order(order asc){
+  _id,
+  year,
+  title,
+  detail
+}`;
+
+export const academicServiceQuery = groq`*[_type == "academicService"] | order(category asc, order asc){
+  _id,
+  category,
+  year,
+  title,
+  detail
 }`;

@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import PageHero from "@/components/PageHero";
 import { awardsQuery } from "@/lib/queries";
 import { client, hasConfig } from "@/sanity/client";
+import { getPageIntro } from "@/lib/pageIntro";
 
 export const revalidate = 0;
 
@@ -14,15 +15,18 @@ export const metadata: Metadata = {
 };
 
 export default async function AwardsPage() {
-  const awards = hasConfig ? await client.fetch(awardsQuery).catch(() => []) : [];
+  const [intro, awards] = await Promise.all([
+    getPageIntro("awards"),
+    hasConfig ? client.fetch(awardsQuery).catch(() => []) : [],
+  ]);
 
   return (
     <main>
       <Navbar />
       <PageHero
-        eyebrow="Recognition"
-        title="Awards"
-        description="Grants, fellowships, scholarships, and honours supporting research with real-world reach."
+        eyebrow={intro.eyebrow}
+        title={intro.title}
+        description={intro.description}
       />
       <Awards awards={awards} />
       <Footer />
