@@ -6,7 +6,6 @@ import Projects from "@/components/Projects";
 import Publications from "@/components/Publications";
 import { projectsQuery, publicationsQuery } from "@/lib/queries";
 import { client, hasConfig } from "@/sanity/client";
-import { getPageIntro } from "@/lib/pageIntro";
 
 export const revalidate = 0;
 
@@ -15,24 +14,30 @@ export const metadata: Metadata = {
   description: "Research projects, working papers, journal publications, case studies, reports, and op-eds.",
 };
 
+const pageDescription =
+  "My research examines how digital technologies, innovation, and market institutions shape firm behaviour, consumer decision-making, and economic outcomes in emerging markets. I draw on quantitative methods, field-based research, and collaborations with organisations to investigate questions at the intersection of marketing, technology, and development.";
+
 export default async function PublicationsPage() {
-  const [intro, projects, publications] = hasConfig
+  const [projects, publications] = hasConfig
     ? await Promise.all([
-        getPageIntro("publications"),
         client.fetch(projectsQuery).catch(() => []),
         client.fetch(publicationsQuery).catch(() => []),
       ])
-    : [await getPageIntro("publications"), [], []];
+    : [[], []];
+
+  const visibleProjects = projects.filter(
+    (project: { title?: string }) =>
+      !project.title?.toLowerCase().includes("frugal space race"),
+  );
 
   return (
     <main>
       <Navbar />
       <PageHero
-        eyebrow={intro.eyebrow}
-        title={intro.title}
-        description={intro.description}
+        title="Research & Publications"
+        description={pageDescription}
       />
-      <Projects projects={projects} />
+      <Projects projects={visibleProjects} />
       <Publications publications={publications} />
       <Footer />
     </main>

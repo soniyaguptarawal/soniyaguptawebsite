@@ -11,44 +11,36 @@ export type PageKey =
   | 'research-lab'
 
 interface PageIntro {
-  eyebrow: string
   title: string
   description: string
 }
 
 const defaults: Record<PageKey, PageIntro> = {
   publications: {
-    eyebrow: 'Research portfolio',
-    title: 'Publications',
-    description: 'Projects in motion and the papers, cases, reports, and public writing that emerge from them.',
+    title: 'Research & Publications',
+    description: 'My research examines how digital technologies, innovation, and market institutions shape firm behaviour, consumer decision-making, and economic outcomes in emerging markets. I draw on quantitative methods, field-based research, and collaborations with organisations to investigate questions at the intersection of marketing, technology, and development.',
   },
   teaching: {
-    eyebrow: 'Learning by doing',
     title: 'Teaching',
     description: 'MBA teaching, course coordination, and undergraduate supervision across marketing, innovation, and customer engagement.',
   },
   awards: {
-    eyebrow: 'Recognition',
     title: 'Awards',
     description: 'Grants, fellowships, scholarships, and honours supporting research with real-world reach.',
   },
   talks: {
-    eyebrow: 'Ideas in conversation',
     title: 'Talks',
     description: 'Conference presentations, doctoral consortia, seminars, and workshops where research is tested and sharpened.',
   },
   'media-mentions': {
-    eyebrow: 'In the public conversation',
     title: 'Media Mentions',
     description: 'Research stories, press coverage, and ideas translated for audiences beyond academia.',
   },
   'academic-service': {
-    eyebrow: 'Contributing to the field',
     title: 'Academic Service',
     description: 'Peer review, professional communities, and service that strengthen research institutions and scholarly exchange.',
   },
   'research-lab': {
-    eyebrow: 'Build research together',
     title: 'Research Lab',
     description: 'A collaborative home for research apprentices, assistants, and students working on markets at the margins.',
   },

@@ -24,13 +24,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'eyebrow',
-      title: 'Small heading',
-      type: 'string',
-      description: 'The short amber label above the main page heading.',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: 'title',
       title: 'Page heading',
       type: 'string',
@@ -45,6 +38,6 @@ export default defineType({
     }),
   ],
   preview: {
-    select: {title: 'title', subtitle: 'eyebrow'},
+    select: {title: 'title', subtitle: 'page'},
   },
 })

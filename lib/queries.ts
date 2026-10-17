@@ -6,7 +6,6 @@ export const siteSectionsQuery = groq`*[_type == "siteSection"] | order(order as
 }`;
 
 export const pageIntroQuery = groq`*[_type == "pageIntro" && page == $page][0]{
-  eyebrow,
   title,
   description
 }`;

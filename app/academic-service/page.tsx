@@ -40,7 +40,6 @@ export default async function AcademicServicePage() {
     <main>
       <Navbar />
       <PageHero
-        eyebrow={intro.eyebrow}
         title={intro.title}
         description={intro.description}
       />
