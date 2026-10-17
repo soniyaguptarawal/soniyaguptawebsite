@@ -103,3 +103,43 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+/* Keep the complete introduction visible on shorter desktop/laptop screens. */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .about-section {
+    padding-top: 4rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .about-heading-block {
+    margin-bottom: 1.5rem;
+  }
+
+  .about-title {
+    margin-bottom: 0.5rem;
+    font-size: clamp(3rem, 7vh, 3.5rem);
+  }
+
+  .about-grid {
+    gap: 2rem;
+  }
+
+  .about-photo {
+    max-width: min(20rem, 38vh);
+  }
+
+  .about-bio {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .about-actions {
+    gap: 0.375rem;
+    margin-top: 0.75rem;
+  }
+
+  .about-action {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.75rem;
+  }
+}

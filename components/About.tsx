@@ -82,12 +82,15 @@ export default function About({
   ].filter((l) => l.href);
 
   return (
-    <section id="about" className="pt-24 pb-24 md:pt-28 md:pb-32 relative">
+    <section
+      id="about"
+      className="about-section relative pt-20 pb-16 md:pt-24 md:pb-20 lg:min-h-[100svh] lg:pt-[clamp(4.5rem,9vh,6rem)] lg:pb-[clamp(2rem,4vh,3rem)]"
+    >
       <div className="max-w-7xl mx-auto px-6">
         {/* Name heading + title + institution */}
-        <div className="mb-16 md:mb-20">
+        <div className="about-heading-block mb-10 md:mb-12 lg:mb-[clamp(2rem,4vh,3rem)]">
           <motion.h1
-            className="font-serif text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-indigo-deep mb-4 tracking-tight leading-[1.05]"
+            className="about-title font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[clamp(3.75rem,8vh,5.5rem)] font-black text-indigo-deep mb-3 tracking-tight leading-[1.02]"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
@@ -114,10 +117,10 @@ export default function About({
           </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-12 md:gap-16 items-start">
+        <div className="about-grid grid md:grid-cols-5 gap-10 lg:gap-12 items-start lg:items-center">
           {/* Photo */}
           <ScrollReveal className="md:col-span-2" delay={0.1} direction="left">
-            <div className="relative">
+            <div className="about-photo relative w-full max-w-md mx-auto lg:max-w-[min(25rem,41.25svh)]">
               <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-cream-dark">
                 {photo ? (
                   <img
@@ -140,7 +143,7 @@ export default function About({
 
           {/* Bio content */}
           <ScrollReveal className="md:col-span-3" delay={0.2}>
-            <div className="prose prose-lg max-w-none text-indigo-deep/80 leading-relaxed">
+            <div className="about-bio prose max-w-none text-[15px] sm:text-base text-indigo-deep/80 leading-[1.55]">
               {bio ? (
                 <PortableText value={bio} />
               ) : (
@@ -169,14 +172,14 @@ export default function About({
             </div>
 
             {/* Social links & CV */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="about-actions mt-5 flex flex-wrap items-center gap-2">
               {socialLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href!}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-deep/10 text-sm text-indigo-deep/70 hover:border-amber hover:text-amber transition-colors"
+                  className="about-action inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-deep/10 text-sm text-indigo-deep/70 hover:border-amber hover:text-amber transition-colors"
                 >
                   {link.icon}
                   {link.label}
@@ -186,7 +189,7 @@ export default function About({
                 href={cvFile || "/cv.pdf"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-deep text-white text-sm hover:bg-indigo-mid transition-colors"
+                className="about-action inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-deep text-white text-sm hover:bg-indigo-mid transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
