@@ -22,11 +22,15 @@ interface PublicationsProps {
 }
 
 const typeLabels: Record<string, string> = {
-  journal: "Journal Article",
-  working: "Working Paper",
-  chapter: "Book Chapter",
+  working: "Working Papers",
+  journal: "Journal Publications",
+  chapter: "Case Studies",
+  report: "Reports",
+  oped: "Op-Eds",
   conference: "Conference Paper",
 };
+
+const typeOrder = ["working", "journal", "chapter", "report", "oped", "conference"];
 
 const defaultPublications: Publication[] = [
   // --- Published ---
@@ -134,7 +138,12 @@ export default function Publications({ publications }: PublicationsProps) {
   const [filter, setFilter] = useState<string>("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const types = ["all", ...Array.from(new Set(displayPubs.map((p) => p.type)))];
+  const availableTypes = new Set(displayPubs.map((p) => p.type));
+  const types = [
+    "all",
+    ...typeOrder.filter((type) => availableTypes.has(type)),
+    ...Array.from(availableTypes).filter((type) => !typeOrder.includes(type)),
+  ];
   const filtered = filter === "all" ? displayPubs : displayPubs.filter((p) => p.type === filter);
 
   return (
