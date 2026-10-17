@@ -6,6 +6,7 @@ import RAApplication from "@/components/RAApplication";
 import Team from "@/components/Team";
 import { raApplicationQuery, teamQuery } from "@/lib/queries";
 import { client, hasConfig } from "@/sanity/client";
+import { getPageIntro } from "@/lib/pageIntro";
 
 export const revalidate = 0;
 
@@ -15,20 +16,21 @@ export const metadata: Metadata = {
 };
 
 export default async function ResearchLabPage() {
-  const [raApplication, team] = hasConfig
+  const [intro, raApplication, team] = hasConfig
     ? await Promise.all([
+        getPageIntro("research-lab"),
         client.fetch(raApplicationQuery).catch(() => null),
         client.fetch(teamQuery).catch(() => []),
       ])
-    : [null, []];
+    : [await getPageIntro("research-lab"), null, []];
 
   return (
     <main>
       <Navbar />
       <PageHero
-        eyebrow="Build research together"
-        title="Research Lab"
-        description="A collaborative home for research apprentices, assistants, and students working on markets at the margins."
+        eyebrow={intro.eyebrow}
+        title={intro.title}
+        description={intro.description}
       />
       <RAApplication data={raApplication} headingOverride="CJBS Research Apprenticeship Program 2022–2027" />
       <Team members={team} />

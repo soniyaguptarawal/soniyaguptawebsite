@@ -7,6 +7,7 @@ import SectionHeading from "@/components/SectionHeading";
 import { cvTeaching, type TeachingEntry } from "@/lib/cvContent";
 import { teachingQuery } from "@/lib/queries";
 import { client, hasConfig } from "@/sanity/client";
+import { getPageIntro } from "@/lib/pageIntro";
 
 export const revalidate = 0;
 
@@ -30,16 +31,19 @@ const roleStyles: Record<string, string> = {
 };
 
 export default async function TeachingPage() {
-  const sanityTeaching = hasConfig ? await client.fetch(teachingQuery).catch(() => []) : [];
+  const [intro, sanityTeaching] = await Promise.all([
+    getPageIntro("teaching"),
+    hasConfig ? client.fetch(teachingQuery).catch(() => []) : [],
+  ]);
   const entries: TeachingEntry[] = sanityTeaching?.length ? sanityTeaching : cvTeaching;
 
   return (
     <main>
       <Navbar />
       <PageHero
-        eyebrow="Learning by doing"
-        title="Teaching"
-        description="MBA teaching, course coordination, and undergraduate supervision across marketing, innovation, and customer engagement."
+        eyebrow={intro.eyebrow}
+        title={intro.title}
+        description={intro.description}
       />
 
       <section className="relative py-20 md:py-28">

@@ -9,7 +9,9 @@ import teaching from "./teaching";
 import newsItem from "./newsItem";
 import award from "./award";
 import consultingProject from "./consultingProject";
-import siteSection from "./siteSection";
+import pageIntro from "./pageIntro";
+import doctoralDevelopment from "./doctoralDevelopment";
+import academicService from "./academicService";
 
 export const schemaTypes = [
   profile,
@@ -23,5 +25,7 @@ export const schemaTypes = [
   newsItem,
   award,
   consultingProject,
-  siteSection,
+  pageIntro,
+  doctoralDevelopment,
+  academicService,
 ];
