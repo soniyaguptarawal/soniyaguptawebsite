@@ -1,114 +1,104 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-const defaultNavLinks = [
-  { href: "#about", label: "About" },
-  { href: "#publications", label: "Publications" },
-  { href: "/research", label: "Research Projects & Team" },
-  { href: "#news", label: "News & Insights" },
-  { href: "#talks", label: "Conferences" },
-  { href: "#awards", label: "Awards" },
+const navLinks = [
+  { href: "/about", label: "About" },
+  { href: "/publications", label: "Publications" },
   { href: "/teaching", label: "Teaching" },
-  { href: "#apply", label: "Apply" },
+  { href: "/awards", label: "Awards" },
+  { href: "/talks", label: "Talks" },
+  { href: "/media-mentions", label: "Media Mentions" },
+  { href: "/academic-service", label: "Academic Service" },
+  { href: "/research-lab", label: "Research Lab" },
 ];
 
-interface NavbarProps {
-  navLinks?: { href: string; label: string }[];
-}
-
-export default function Navbar({ navLinks }: NavbarProps) {
-  const links = navLinks?.length ? navLinks : defaultNavLinks;
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const isHome = pathname === "/";
-
-  function resolveHref(href: string) {
-    if (href.startsWith("#")) return isHome ? href : `/${href}`;
-    return href;
-  }
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    const onScroll = () => setScrolled(window.scrollY > 36);
+    onScroll();
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      aria-label="Primary navigation"
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
         scrolled
-          ? "nav-blur bg-cream/90 shadow-sm py-3"
-          : "bg-cream/80 py-5"
+          ? "nav-blur border-indigo-deep/8 bg-cream/95 py-2.5 shadow-sm"
+          : "border-indigo-deep/5 bg-cream/90 py-4"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <a
-          href={isHome ? "#" : "/"}
-          className="font-serif text-xl font-bold transition-colors text-indigo-deep hover:text-amber"
-        >
-        </a>
-
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={resolveHref(link.href)}
-              className={`link-underline text-sm font-medium transition-colors text-indigo-deep/70 hover:text-indigo-deep`}
-            >
-              {link.label}
-            </a>
-          ))}
+      <div className="mx-auto flex max-w-[90rem] items-center justify-end px-5 lg:px-8 xl:justify-center">
+        <div className="hidden items-center gap-5 xl:flex 2xl:gap-7">
+          {navLinks.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative whitespace-nowrap py-2 text-[13px] font-medium transition-colors ${
+                  active ? "text-indigo-deep" : "text-indigo-deep/60 hover:text-indigo-deep"
+                }`}
+              >
+                {link.label}
+                <span
+                  className={`absolute inset-x-0 -bottom-0.5 mx-auto h-0.5 rounded-full bg-amber transition-all ${
+                    active ? "w-full" : "w-0"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </div>
 
-        {/* Mobile hamburger */}
         <button
-          className="md:hidden flex flex-col gap-1.5 p-3"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
+          type="button"
+          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-full border border-indigo-deep/10 xl:hidden"
+          onClick={() => setMobileOpen((open) => !open)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileOpen}
         >
-          <span
-            className={`w-6 h-0.5 transition-transform bg-indigo-deep ${
-              mobileOpen ? "rotate-45 translate-y-2" : ""
-            }`}
-          />
-          <span
-            className={`w-6 h-0.5 bg-indigo-deep transition-opacity ${
-              mobileOpen ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`w-6 h-0.5 transition-transform bg-indigo-deep ${
-              mobileOpen ? "-rotate-45 -translate-y-2" : ""
-            }`}
-          />
+          <span className={`h-0.5 w-5 bg-indigo-deep transition-transform ${mobileOpen ? "translate-y-2 rotate-45" : ""}`} />
+          <span className={`h-0.5 w-5 bg-indigo-deep transition-opacity ${mobileOpen ? "opacity-0" : ""}`} />
+          <span className={`h-0.5 w-5 bg-indigo-deep transition-transform ${mobileOpen ? "-translate-y-2 -rotate-45" : ""}`} />
         </button>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden nav-blur bg-cream/95 overflow-hidden"
+            className="nav-blur overflow-hidden border-t border-indigo-deep/5 bg-cream/98 xl:hidden"
           >
-            <div className="px-6 py-4 flex flex-col gap-1">
-              {links.map((link) => (
-                <a
-                  key={link.href}
-                  href={resolveHref(link.href)}
-                  className="py-3 text-base font-medium text-indigo-deep/80 hover:text-amber transition-colors"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
+            <div className="mx-auto grid max-w-3xl gap-1 px-5 py-4 sm:grid-cols-2">
+              {navLinks.map((link) => {
+                const active = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => setMobileOpen(false)}
+                    className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                      active ? "bg-indigo-deep text-white" : "text-indigo-deep/75 hover:bg-indigo-deep/5"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
           </motion.div>
         )}

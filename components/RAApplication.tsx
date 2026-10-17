@@ -6,6 +6,7 @@ import SectionHeading from "./SectionHeading";
 
 interface RAApplicationProps {
   data: any;
+  headingOverride?: string;
 }
 
 const defaultData = {
@@ -33,7 +34,7 @@ const defaultIntro = [
   "As part of this initiative, we are offering Research Internship opportunities across multiple domains. Selected interns will contribute meaningfully to ongoing research activities and will report to an assigned project manager or research scholar.",
 ];
 
-export default function RAApplication({ data }: RAApplicationProps) {
+export default function RAApplication({ data, headingOverride }: RAApplicationProps) {
   const d = data || defaultData;
 
   return (
@@ -41,7 +42,7 @@ export default function RAApplication({ data }: RAApplicationProps) {
       <div className="absolute inset-0 dot-grid opacity-30" />
       <div className="relative max-w-7xl mx-auto px-6">
         <SectionHeading
-          title={d.heading || defaultData.heading}
+          title={headingOverride || d.heading || defaultData.heading}
           subtitle="Join our research team at the University of Cambridge"
         />
 
