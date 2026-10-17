@@ -26,7 +26,7 @@ const typeLabels: Record<string, string> = {
   journal: "Journal Publications",
   chapter: "Case Studies",
   report: "Reports",
-  oped: "Op-Eds",
+  oped: "Opinion Articles",
   conference: "Conference Paper",
 };
 

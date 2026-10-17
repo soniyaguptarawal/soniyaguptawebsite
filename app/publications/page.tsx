@@ -11,7 +11,7 @@ export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "Publications & Research Projects | Soniya Gupta-Rawal",
-  description: "Research projects, working papers, journal publications, case studies, reports, and op-eds.",
+  description: "Research projects, working papers, journal publications, case studies, reports, and opinion articles.",
 };
 
 const pageDescription =
