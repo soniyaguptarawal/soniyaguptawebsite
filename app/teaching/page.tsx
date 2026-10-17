@@ -1,237 +1,83 @@
-import { client, hasConfig } from "@/sanity/client";
-import { urlFor } from "@/sanity/client";
-import { teachingQuery } from "@/lib/queries";
-import Navbar from "@/components/Navbar";
+import type { Metadata } from "next";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import PageHero from "@/components/PageHero";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import { cvTeaching, type TeachingEntry } from "@/lib/cvContent";
+import { teachingQuery } from "@/lib/queries";
+import { client, hasConfig } from "@/sanity/client";
 
 export const revalidate = 0;
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Teaching | Soniya Gupta-Rawal",
-  description:
-    "Teaching experience and course coordination by Soniya Gupta-Rawal at the University of Cambridge.",
+  description: "Teaching, course coordination, and undergraduate supervision at Cambridge and MICA.",
 };
-
-interface TeachingEntry {
-  _id: string;
-  title: string;
-  role: string;
-  course: string;
-  professor: string;
-  institution: string;
-  period: string;
-  description: string;
-  courseOutlineUrl?: string;
-  photo?: any;
-}
 
 const roleLabels: Record<string, string> = {
   ta: "Teaching Assistant",
   coordinator: "Course Coordinator",
   supervisor: "Undergraduate Supervisor",
-  other: "Mentor / Other",
+  other: "Mentoring & Supervision",
 };
 
-const roleColors: Record<string, string> = {
+const roleStyles: Record<string, string> = {
   ta: "bg-indigo-deep/10 text-indigo-deep",
   coordinator: "bg-amber/10 text-amber",
-  supervisor: "bg-green-100 text-green-700",
+  supervisor: "bg-emerald-50 text-emerald-700",
   other: "bg-slate-100 text-slate-600",
 };
 
-const defaultTeaching: TeachingEntry[] = [
-  {
-    _id: "t1",
-    title: "MBA Teaching Assistant — MBA14: Managing Innovation Strategically",
-    role: "ta",
-    course: "MBA14: Managing Innovation Strategically",
-    professor: "Prof. Jeremy Hutchison-Krupat",
-    institution: "University of Cambridge",
-    period: "2024\u20132026",
-    description: "",
-  },
-  {
-    _id: "t2",
-    title: "Executive MBA Course Coordinator — EMBA10: Marketing Management",
-    role: "coordinator",
-    course: "EMBA10: Marketing Management",
-    professor: "Prof. Eden Yin & Dominique Lauga",
-    institution: "University of Cambridge",
-    period: "2025\u20132026",
-    description: "",
-  },
-  {
-    _id: "t3",
-    title: "Global MBA Course Coordinator — GEMBA10: Marketing Management",
-    role: "coordinator",
-    course: "GEMBA10: Marketing Management",
-    professor: "Prof. Eden Yin & Dominique Lauga",
-    institution: "University of Cambridge",
-    period: "2025\u20132026",
-    description: "",
-  },
-  {
-    _id: "t4",
-    title: "MBA Teaching Assistant — MBA96: Marketing & Innovation in Emerging Economies",
-    role: "ta",
-    course: "MBA96: Marketing & Innovation in Emerging Economies",
-    professor: "Prof. Jaideep Prabhu",
-    institution: "University of Cambridge",
-    period: "2023\u20132025",
-    description: "",
-  },
-  {
-    _id: "t5",
-    title: "Undergraduate Supervisor — 3E2: Marketing, Engineering Department",
-    role: "supervisor",
-    course: "3E2: Marketing, Engineering Department (Undergraduate Honours)",
-    professor: "",
-    institution: "University of Cambridge",
-    period: "2025\u20132026",
-    description: "",
-  },
-  {
-    _id: "t6",
-    title: "Undergraduate Supervisor — M6: Marketing, Management Studies Tripos",
-    role: "supervisor",
-    course: "M6: Marketing, Management Studies Tripos (Undergraduate Honours)",
-    professor: "",
-    institution: "Emmanuel College, University of Cambridge",
-    period: "2023\u20132025",
-    description: "",
-  },
-  {
-    _id: "t7",
-    title: "Supervisor — BME Shadow Scheme",
-    role: "other",
-    course: "BME Shadow Scheme",
-    professor: "",
-    institution: "Emmanuel College, University of Cambridge",
-    period: "2023\u20132024",
-    description: "",
-  },
-  {
-    _id: "t8",
-    title: "MBA Teaching & Research Assistant — Decoding Customer Engagement",
-    role: "ta",
-    course: "MBA Decoding Customer Engagement",
-    professor: "Prof. Shaphali Gupta",
-    institution: "MICA, India",
-    period: "2019\u20132021",
-    description: "",
-  },
-];
-
-async function getData() {
-  if (!hasConfig) return [];
-  return client.fetch(teachingQuery).catch(() => []);
-}
-
 export default async function TeachingPage() {
-  const teaching = await getData();
-  const entries: TeachingEntry[] =
-    teaching?.length > 0 ? teaching : defaultTeaching;
+  const sanityTeaching = hasConfig ? await client.fetch(teachingQuery).catch(() => []) : [];
+  const entries: TeachingEntry[] = sanityTeaching?.length ? sanityTeaching : cvTeaching;
 
   return (
     <main>
       <Navbar />
+      <PageHero
+        eyebrow="Learning by doing"
+        title="Teaching"
+        description="MBA teaching, course coordination, and undergraduate supervision across marketing, innovation, and customer engagement."
+      />
 
-      {/* Page header */}
-      <section className="pt-32 pb-16 md:pt-40 md:pb-20 bg-indigo-deep relative overflow-hidden">
-        <div className="absolute inset-0 dot-grid-light" />
-        <div className="absolute top-1/4 -right-32 w-96 h-96 bg-amber/10 rounded-full blur-3xl" />
-        <div className="relative max-w-7xl mx-auto px-6">
-          <ScrollReveal>
-            <span className="text-amber-light font-medium text-sm tracking-[0.2em] uppercase mb-4 block">
-              University of Cambridge
-            </span>
-            <h1 className="font-serif text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-              Teaching
-            </h1>
-            <p className="text-white/50 text-lg max-w-2xl">
-              Teaching assistantships, course coordination, and undergraduate supervision
-              at the University of Cambridge and beyond.
-            </p>
-          </ScrollReveal>
-        </div>
-      </section>
+      <section className="relative py-20 md:py-28">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading
+            title="Teaching Experience"
+            subtitle="Courses and supervision at the University of Cambridge and MICA."
+          />
 
-      {/* Teaching entries */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="space-y-4">
-            {entries.map((entry, i) => (
-              <ScrollReveal key={entry._id} delay={i * 0.05}>
-                <div className="bg-white rounded-xl p-6 md:p-8 border border-indigo-deep/5 hover:border-amber/20 transition-colors">
-                  <div className="flex gap-6">
-                    {/* Text content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-center gap-3 mb-3">
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            roleColors[entry.role] || roleColors.other
-                          }`}
-                        >
-                          {roleLabels[entry.role] || entry.role}
-                        </span>
-                        <span className="text-sm text-amber font-medium">
-                          {entry.period}
-                        </span>
-                      </div>
-                      <h3 className="font-serif text-lg font-bold text-indigo-deep mb-1">
-                        {entry.course || entry.title}
-                      </h3>
-                      {entry.professor && (
-                        <p className="text-sm text-slate-warm">{entry.professor}</p>
-                      )}
-                      <p className="text-sm text-slate-light">{entry.institution}</p>
-                      {entry.description && (
-                        <p className="text-sm text-indigo-deep/60 mt-3 leading-relaxed">
-                          {entry.description}
-                        </p>
-                      )}
-                      {entry.courseOutlineUrl && (
-                        <div className="mt-4 pt-4 border-t border-indigo-deep/5">
-                          <a
-                            href={entry.courseOutlineUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-sm font-medium text-amber hover:text-amber-light transition-colors"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            Course Outline
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Photo on the right */}
-                    {entry.photo && (
-                      <div className="hidden md:block flex-shrink-0">
-                        <div className="w-32 h-32 rounded-xl overflow-hidden bg-cream-dark">
-                          <img
-                            src={urlFor(entry.photo).width(256).height(256).url()}
-                            alt={entry.course || entry.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      </div>
-                    )}
+          <div className="grid gap-5 md:grid-cols-2">
+            {entries.map((entry, index) => (
+              <ScrollReveal key={entry._id} delay={Math.min(index * 0.05, 0.25)}>
+                <article className="group relative h-full overflow-hidden rounded-2xl border border-indigo-deep/7 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-amber/25 hover:shadow-lg hover:shadow-indigo-deep/5 md:p-7">
+                  <span className="absolute right-5 top-4 font-serif text-5xl font-black text-indigo-deep/[0.035]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="mb-5 flex flex-wrap items-center gap-2">
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${roleStyles[entry.role] || roleStyles.other}`}>
+                      {roleLabels[entry.role] || entry.role}
+                    </span>
+                    <span className="text-xs font-semibold text-amber">{entry.period}</span>
                   </div>
-                </div>
+                  <h2 className="max-w-[90%] font-serif text-xl font-bold leading-snug text-indigo-deep transition-colors group-hover:text-amber md:text-2xl">
+                    {entry.course}
+                  </h2>
+                  {entry.professor && <p className="mt-3 text-sm text-indigo-deep/70">{entry.professor}</p>}
+                  <p className="mt-1 text-sm text-slate-warm">{entry.institution}</p>
+                  {entry.description && (
+                    <p className="mt-5 border-t border-indigo-deep/7 pt-4 text-sm leading-relaxed text-slate-warm">
+                      {entry.description}
+                    </p>
+                  )}
+                </article>
               </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
-
       <Footer />
     </main>
   );

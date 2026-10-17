@@ -26,6 +26,15 @@ body {
   overflow-x: hidden;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+}
+
 /* Dot grid pattern background */
 .dot-grid {
   background-image: radial-gradient(circle, rgba(30, 27, 75, 0.08) 1px, transparent 1px);
